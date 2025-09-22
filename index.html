@@ -19,10 +19,16 @@
             --text-color: #333;
             --sidebar-text-color: #f8f9fa;
             --card-bg: #ffffff;
+            /* --- MODIFIED: เปลี่ยน shadow เดิม --- */
             --shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Sarabun', sans-serif; }
         body { background-color: var(--background-color); color: var(--text-color); display: flex; }
+        
+        /* --- Styles อื่นๆ ที่ไม่เปลี่ยนแปลง --- */
+        #loading-screen, .sidebar, .main-content, header, .page, .form-group, button.btn-primary, #saved-activities-list, #daily-activities-list {
+             /* โค้ด CSS ส่วนนี้เหมือนเดิมทั้งหมด */
+        }
         #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: var(--primary-color); display: flex; justify-content: center; align-items: center; z-index: 1000; flex-direction: column; color: white; transition: opacity 0.5s ease-out, visibility 0.5s ease-out; }
         .spinner { border: 8px solid rgba(255, 255, 255, 0.3); border-top: 8px solid var(--secondary-color); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; margin-bottom: 20px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -42,8 +48,6 @@
         #page-title { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); }
         .page { display: none; }
         .page.active { display: block; }
-        .card { background-color: var(--card-bg); border-radius: 8px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
-        .card h2 { color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 10px; margin-bottom: 15px; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
         .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
@@ -53,6 +57,22 @@
         #saved-activities-list li strong, #daily-activities-list li strong { font-size: 1.1rem; color: var(--primary-color); }
         #saved-activities-list li small, #daily-activities-list li small { display: block; color: #666; margin-bottom: 5px; }
         
+        /* --- NEW: 3D Border Style --- */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e0e0e0;
+            /* เพิ่มเงาหลายชั้นเพื่อสร้างมิติ */
+            box-shadow: 0 1px 2px rgba(0,0,0,0.07), 
+                        0 2px 4px rgba(0,0,0,0.07), 
+                        0 4px 8px rgba(0,0,0,0.07), 
+                        0 8px 16px rgba(0,0,0,0.07);
+        }
+
+        .card h2 { color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 10px; margin-bottom: 15px; }
+
         /* --- Calendar Styles --- */
         .calendar-container { width: 100%; }
         .calendar-header { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; color: var(--primary-color); }
@@ -61,28 +81,21 @@
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
         .calendar-grid div { text-align: center; padding: 10px; font-size: 0.9rem; }
         .calendar-day-name { font-weight: 700; color: var(--text-color); }
-        .calendar-date { border-radius: 50%; cursor: pointer; transition: background-color 0.2s, color 0.2s; border: 2px solid transparent; position: relative; }
-        .calendar-date:hover { background-color: var(--secondary-color); color: #fff; }
+        .calendar-date { border-radius: 50%; cursor: pointer; transition: background-color 0.2s, color 0.2s, transform 0.2s; border: 2px solid transparent; position: relative; }
+        .calendar-date:hover { transform: scale(1.1); }
         .calendar-date.today { background-color: var(--primary-color); color: #fff; font-weight: 700; }
         .calendar-date.empty { cursor: default; }
-        .calendar-date.empty:hover { background-color: transparent; }
+        .calendar-date.empty:hover { transform: none; }
         
-        /* --- NEW: Selected Date and Event Dot Styles --- */
+        /* --- NEW: Full-frame Highlight Style --- */
         .calendar-date.selected {
-            border-color: var(--secondary-color);
-            background-color: transparent;
-            color: var(--primary-color);
+            background-color: var(--secondary-color); /* เปลี่ยนพื้นหลังเป็นสีเหลือง */
+            color: var(--sidebar-bg); /* เปลี่ยนตัวหนังสือเป็นสีเข้ม */
+            font-weight: 700;
+            border-color: var(--secondary-color); /* ทำให้เส้นขอบเป็นสีเดียวกับพื้นหลัง */
         }
-        .event-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: var(--secondary-color);
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
+
+        .event-dot { width: 6px; height: 6px; border-radius: 50%; background-color: var(--secondary-color); position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); }
 
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); z-index: 200; }
@@ -93,44 +106,29 @@
     </style>
 </head>
 <body>
-
     <div id="loading-screen"><div class="spinner"></div><p>กำลังโหลดข้อมูลปฏิทิน...</p></div>
     <nav class="sidebar" id="sidebar"><div class="sidebar-header"><h3><i class="fas fa-calendar-alt"></i> ปฏิทินโรงเรียน</h3></div><ul class="sidebar-nav"><li><a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> หน้าหลัก</a></li><li><a href="#" class="nav-link" data-page="save"><i class="fas fa-save"></i> บันทึกกิจกรรม</a></li><li><a href="#" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> แดชบอร์ด</a></li><li><a href="#" class="nav-link" data-page="search"><i class="fas fa-search"></i> ค้นหากิจกรรม</a></li></ul></nav>
-    
     <main class="main-content" id="main-content">
         <header><button id="menu-toggle"><i class="fas fa-bars"></i></button><h1 id="page-title">หน้าหลัก</h1></header>
-
         <div class="content-wrapper">
             <section id="home-page" class="page active"><div class="card"><h2><i class="fas fa-calendar-check"></i> กิจกรรมที่บันทึกไว้</h2><ul id="saved-activities-list"></ul></div></section>
             <section id="save-page" class="page"><div class="card"><h2><i class="fas fa-edit"></i> เพิ่มกิจกรรมใหม่</h2><form id="save-activity-form"><div class="form-group"><label for="activity-name">ชื่อกิจกรรม</label><input type="text" id="activity-name" required></div><div class="form-group"><label for="activity-date">วันที่</label><input type="date" id="activity-date" required></div><div class="form-group"><label for="activity-desc">รายละเอียด (ถ้ามี)</label><textarea id="activity-desc" rows="4"></textarea></div><button type="submit" class="btn-primary">บันทึกกิจกรรม</button></form></div></section>
-
             <section id="dashboard-page" class="page">
                 <div class="card">
                     <h2><i class="fas fa-calendar-day"></i> ปฏิทินประจำเดือน</h2>
                     <div class="calendar-container">
-                        <div class="calendar-header">
-                            <button id="prev-month-btn"><i class="fas fa-chevron-left"></i></button>
-                            <div id="month-year"></div>
-                            <button id="next-month-btn"><i class="fas fa-chevron-right"></i></button>
-                        </div>
+                        <div class="calendar-header"><button id="prev-month-btn"><i class="fas fa-chevron-left"></i></button><div id="month-year"></div><button id="next-month-btn"><i class="fas fa-chevron-right"></i></button></div>
                         <div class="calendar-grid" id="calendar-days-header"></div>
                         <div class="calendar-grid" id="calendar-dates-grid"></div>
                     </div>
                 </div>
-                
-                <div class="card" id="daily-activities-card" style="display: none;">
-                    <h2 id="daily-activities-title"></h2>
-                    <ul id="daily-activities-list"></ul>
-                </div>
+                <div class="card" id="daily-activities-card" style="display: none;"><h2 id="daily-activities-title"></h2><ul id="daily-activities-list"></ul></div>
             </section>
-
-            <section id="search-page" class="page">
-                 <div class="card"><h2>ค้นหากิจกรรม</h2><p>หน้าสำหรับค้นหากิจกรรม...</p></div>
-            </section>
+            <section id="search-page" class="page"><div class="card"><h2>ค้นหากิจกรรม</h2><p>หน้าสำหรับค้นหากิจกรรม...</p></div></section>
         </div>
     </main>
-
     <script>
+        // JavaScript ทั้งหมดเหมือนเดิม ไม่มีการเปลี่ยนแปลง
         document.addEventListener('DOMContentLoaded', function() {
             const menuToggle = document.getElementById('menu-toggle');
             const sidebar = document.getElementById('sidebar');
@@ -141,132 +139,28 @@
             const loadingScreen = document.getElementById('loading-screen');
             const saveActivityForm = document.getElementById('save-activity-form');
             const savedActivitiesList = document.getElementById('saved-activities-list');
-            
-            // Calendar Elements
             const monthYearEl = document.getElementById('month-year');
             const calendarDatesGrid = document.getElementById('calendar-dates-grid');
             const calendarDaysHeader = document.getElementById('calendar-days-header');
             const prevMonthBtn = document.getElementById('prev-month-btn');
             const nextMonthBtn = document.getElementById('next-month-btn');
-
-            // --- NEW: Daily Activities Elements ---
             const dailyActivitiesCard = document.getElementById('daily-activities-card');
             const dailyActivitiesTitle = document.getElementById('daily-activities-title');
             const dailyActivitiesList = document.getElementById('daily-activities-list');
-
             let currentDate = new Date(); 
-
-            // --- Loading & Navigation ---
             window.addEventListener('load', () => { loadingScreen.classList.add('hidden'); });
             menuToggle.addEventListener('click', () => { if (window.innerWidth > 768) { sidebar.classList.toggle('closed'); mainContent.classList.toggle('full-width'); } else { sidebar.classList.toggle('open'); sidebar.classList.toggle('closed'); } });
             navLinks.forEach(link => { link.addEventListener('click', function(event) { event.preventDefault(); navigateTo(this.getAttribute('data-page')); }); });
-            
-            function navigateTo(pageId) {
-                navLinks.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-page') === pageId));
-                pages.forEach(page => page.classList.toggle('active', page.id === pageId + '-page'));
-                const activeLink = document.querySelector(`.nav-link[data-page="${pageId}"]`);
-                if (activeLink) pageTitle.textContent = activeLink.textContent;
-                if (window.innerWidth <= 768) { sidebar.classList.remove('open'); sidebar.classList.add('closed'); }
-                // --- NEW: Hide daily activities when leaving dashboard ---
-                if (pageId !== 'dashboard') {
-                    dailyActivitiesCard.style.display = 'none';
-                }
-            }
-
-            // --- Activity Saving Logic ---
+            function navigateTo(pageId) { navLinks.forEach(nav => nav.classList.toggle('active', nav.getAttribute('data-page') === pageId)); pages.forEach(page => page.classList.toggle('active', page.id === pageId + '-page')); const activeLink = document.querySelector(`.nav-link[data-page="${pageId}"]`); if (activeLink) pageTitle.textContent = activeLink.textContent; if (window.innerWidth <= 768) { sidebar.classList.remove('open'); sidebar.classList.add('closed'); } if (pageId !== 'dashboard') { dailyActivitiesCard.style.display = 'none'; } }
             function getActivities() { const activities = localStorage.getItem('schoolActivities'); return activities ? JSON.parse(activities) : []; }
             function displayActivities() { const activities = getActivities(); activities.sort((a, b) => new Date(a.date) - new Date(b.date)); savedActivitiesList.innerHTML = ''; if (activities.length === 0) { savedActivitiesList.innerHTML = '<li>ยังไม่มีกิจกรรมที่บันทึกไว้</li>'; return; } activities.forEach(activity => { const li = document.createElement('li'); li.innerHTML = `<strong>${activity.name}</strong><small>วันที่: ${activity.date}</small><p>${activity.desc}</p>`; savedActivitiesList.appendChild(li); }); }
             saveActivityForm.addEventListener('submit', function(event) { event.preventDefault(); const newActivity = { id: Date.now(), name: saveActivityForm.elements['activity-name'].value, date: saveActivityForm.elements['activity-date'].value, desc: saveActivityForm.elements['activity-desc'].value }; const activities = getActivities(); activities.push(newActivity); localStorage.setItem('schoolActivities', JSON.stringify(activities)); alert('บันทึกกิจกรรมเรียบร้อยแล้ว!'); saveActivityForm.reset(); displayActivities(); renderCalendar(); navigateTo('home'); });
-
-            // --- Calendar Logic ---
-            function renderCalendar() {
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth();
-                const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
-                monthYearEl.textContent = `${monthNames[month]} ${year + 543}`;
-                calendarDatesGrid.innerHTML = '';
-
-                // --- NEW: Get dates with events for marking dots ---
-                const allActivities = getActivities();
-                const eventDates = new Set(allActivities.map(act => act.date));
-
-                const firstDayOfMonth = new Date(year, month, 1).getDay();
-                const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-                for (let i = 0; i < firstDayOfMonth; i++) { calendarDatesGrid.insertAdjacentHTML('beforeend', '<div class="calendar-date empty"></div>'); }
-
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const dateCell = document.createElement('div');
-                    dateCell.classList.add('calendar-date');
-                    dateCell.textContent = day;
-                    
-                    // Format date as YYYY-MM-DD
-                    const fullDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                    
-                    // --- NEW: Add event dot if activity exists ---
-                    if (eventDates.has(fullDate)) {
-                        dateCell.insertAdjacentHTML('beforeend', '<div class="event-dot"></div>');
-                    }
-                    
-                    const today = new Date();
-                    if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) { dateCell.classList.add('today'); }
-                    
-                    // --- NEW: Add Click Event Listener ---
-                    dateCell.addEventListener('click', () => {
-                        // Remove previous selection
-                        const selected = document.querySelector('.calendar-date.selected');
-                        if (selected) selected.classList.remove('selected');
-                        // Add new selection
-                        dateCell.classList.add('selected');
-                        // Display activities for this date
-                        displayActivitiesForDate(fullDate);
-                    });
-
-                    calendarDatesGrid.appendChild(dateCell);
-                }
-            }
-            
-            function renderDayNames() {
-                const dayNames = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
-                calendarDaysHeader.innerHTML = dayNames.map(day => `<div class="calendar-day-name">${day}</div>`).join('');
-            }
-
-            // --- NEW: Function to display activities for a selected date ---
-            function displayActivitiesForDate(dateString) {
-                const allActivities = getActivities();
-                const todaysActivities = allActivities.filter(act => act.date === dateString);
-
-                // Format title date to DD MMMM YYYY (Thai)
-                const dateObj = new Date(dateString);
-                const thaiYear = dateObj.getFullYear() + 543;
-                const thaiMonth = dateObj.toLocaleDateString('th-TH', { month: 'long' });
-                const thaiDay = dateObj.getDate();
-                dailyActivitiesTitle.textContent = `กิจกรรมวันที่ ${thaiDay} ${thaiMonth} ${thaiYear}`;
-                
-                dailyActivitiesList.innerHTML = '';
-                if (todaysActivities.length > 0) {
-                    todaysActivities.forEach(activity => {
-                        const li = document.createElement('li');
-                        li.innerHTML = `<strong>${activity.name}</strong><p>${activity.desc || 'ไม่มีรายละเอียด'}</p>`;
-                        dailyActivitiesList.appendChild(li);
-                    });
-                } else {
-                    dailyActivitiesList.innerHTML = '<li>ไม่มีกิจกรรมในวันที่เลือก</li>';
-                }
-                
-                dailyActivitiesCard.style.display = 'block';
-            }
-
+            function renderCalendar() { const year = currentDate.getFullYear(); const month = currentDate.getMonth(); const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"]; monthYearEl.textContent = `${monthNames[month]} ${year + 543}`; calendarDatesGrid.innerHTML = ''; const allActivities = getActivities(); const eventDates = new Set(allActivities.map(act => act.date)); const firstDayOfMonth = new Date(year, month, 1).getDay(); const daysInMonth = new Date(year, month + 1, 0).getDate(); for (let i = 0; i < firstDayOfMonth; i++) { calendarDatesGrid.insertAdjacentHTML('beforeend', '<div class="calendar-date empty"></div>'); } for (let day = 1; day <= daysInMonth; day++) { const dateCell = document.createElement('div'); dateCell.classList.add('calendar-date'); dateCell.textContent = day; const fullDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`; if (eventDates.has(fullDate)) { dateCell.insertAdjacentHTML('beforeend', '<div class="event-dot"></div>'); } const today = new Date(); if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) { dateCell.classList.add('today'); } dateCell.addEventListener('click', () => { const selected = document.querySelector('.calendar-date.selected'); if (selected) selected.classList.remove('selected'); dateCell.classList.add('selected'); displayActivitiesForDate(fullDate); }); calendarDatesGrid.appendChild(dateCell); } }
+            function renderDayNames() { const dayNames = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส']; calendarDaysHeader.innerHTML = dayNames.map(day => `<div class="calendar-day-name">${day}</div>`).join(''); }
+            function displayActivitiesForDate(dateString) { const allActivities = getActivities(); const todaysActivities = allActivities.filter(act => act.date === dateString); const dateObj = new Date(dateString); const thaiYear = dateObj.getFullYear() + 543; const thaiMonth = dateObj.toLocaleDateString('th-TH', { month: 'long' }); const thaiDay = dateObj.getDate(); dailyActivitiesTitle.textContent = `กิจกรรมวันที่ ${thaiDay} ${thaiMonth} ${thaiYear}`; dailyActivitiesList.innerHTML = ''; if (todaysActivities.length > 0) { todaysActivities.forEach(activity => { const li = document.createElement('li'); li.innerHTML = `<strong>${activity.name}</strong><p>${activity.desc || 'ไม่มีรายละเอียด'}</p>`; dailyActivitiesList.appendChild(li); }); } else { dailyActivitiesList.innerHTML = '<li>ไม่มีกิจกรรมในวันที่เลือก</li>'; } dailyActivitiesCard.style.display = 'block'; }
             prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
             nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
-
-            function initializeApp() {
-                if (window.innerWidth <= 768) { sidebar.classList.add('closed'); mainContent.classList.add('full-width'); } else { sidebar.classList.remove('closed'); mainContent.classList.remove('full-width'); }
-                displayActivities();
-                renderDayNames();
-                renderCalendar();
-            }
-
+            function initializeApp() { if (window.innerWidth <= 768) { sidebar.classList.add('closed'); mainContent.classList.add('full-width'); } else { sidebar.classList.remove('closed'); mainContent.classList.remove('full-width'); } displayActivities(); renderDayNames(); renderCalendar(); }
             initializeApp();
         });
     </script>
