@@ -19,7 +19,6 @@
             --text-color: #333;
             --sidebar-text-color: #f8f9fa;
             --card-bg: #ffffff;
-            --shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         * { 
             margin: 0; 
@@ -125,7 +124,7 @@
             padding: 10px; 
             background-color: var(--card-bg); 
             border-radius: 8px; 
-            box-shadow: var(--shadow); 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
             margin-bottom: 20px; 
         }
         #menu-toggle { 
@@ -192,14 +191,12 @@
             margin-bottom: 5px; 
         }
         
-        /* 3D Border Style */
         .card {
             background-color: var(--card-bg);
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 20px;
             border: 1px solid #e0e0e0;
-            /* เพิ่มเงาหลายชั้นเพื่อสร้างมิติ */
             box-shadow: 0 1px 2px rgba(0,0,0,0.07), 
                         0 2px 4px rgba(0,0,0,0.07), 
                         0 4px 8px rgba(0,0,0,0.07), 
@@ -213,7 +210,6 @@
             margin-bottom: 15px; 
         }
 
-        /* Calendar Styles */
         .calendar-container { 
             width: 100%; 
         }
@@ -271,12 +267,11 @@
             transform: none; 
         }
         
-        /* Full-frame Highlight Style */
         .calendar-date.selected {
-            background-color: var(--secondary-color); /* เปลี่ยนพื้นหลังเป็นสีเหลือง */
-            color: var(--sidebar-bg); /* เปลี่ยนตัวหนังสือเป็นสีเข้ม */
+            background-color: var(--secondary-color);
+            color: var(--sidebar-bg);
             font-weight: 700;
-            border-color: var(--secondary-color); /* ทำให้เส้นขอบเป็นสีเดียวกับพื้นหลัง */
+            border-color: var(--secondary-color);
         }
 
         .event-dot { 
