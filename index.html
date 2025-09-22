@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ปฏิทินโรงเรียน</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* --- 1. CSS Variables & Global Styles --- */
+        :root {
+            --primary-color: #6f42c1; /* ม่วง */
+            --secondary-color: #ffc107; /* เหลือง */
+            --background-color: #f8f9fa;
+            --sidebar-bg: #343a40;
+            --text-color: #333;
+            --sidebar-text-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+        }
+        
+        /* --- 2. Loading Screen --- */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+            color: white;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+
+        .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid var(--secondary-color);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* --- 3. Sidebar Menu --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text-color);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transition: transform 0.3s ease-in-out;
+            z-index: 100;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-100%);
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #495057;
+        }
+
+        .sidebar-header h3 {
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .sidebar-nav li a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--sidebar-text-color);
+            text-decoration: none;
+            transition: background-color 0.2s, padding-left 0.2s;
+        }
+
+        .sidebar-nav li a:hover, .sidebar-nav li a.active {
+            background-color: var(--primary-color);
+            padding-left: 25px;
+        }
+
+        .sidebar-nav li a i {
+            margin-right: 15px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* --- 4. Main Content Area --- */
+        .main-content {
+            flex-grow: 1;
+            margin-left: 260px;
+            padding: 20px;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .main-content.full-width {
+            margin-left: 0;
+        }
+        
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        #menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-color);
+        }
+
+        #page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Page Content */
+        .page {
+            display: none; /* ซ่อนทุกหน้าไว้ก่อน */
+        }
+        
+        .page.active {
+            display: block; /* แสดงเฉพาะหน้าที่มี class 'active' */
+        }
+        
+        /* Common styles for cards */
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* --- 5. Page Specific Styles --- */
+        
+        /* Dashboard Page */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .dashboard-card {
+            background: linear-gradient(135deg, var(--primary-color), #8e44ad);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .dashboard-card .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        .dashboard-card .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .dashboard-card .stat-label {
+            font-size: 1rem;
+        }
+
+        /* Search Page */
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+        .search-form input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .search-form input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        .search-form button {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .search-results {
+            margin-top: 20px;
+        }
+
+        /* --- 6. Responsive Design --- */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 200;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+            .main-content.full-width {
+                margin-left: 0;
+            }
+            #page-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <p>กำลังโหลดข้อมูลปฏิทิน...</p>
+    </div>
+
+    <nav class="sidebar closed" id="sidebar">
+        <div class="sidebar-header">
+            <h3><i class="fas fa-calendar-alt"></i> ปฏิทินโรงเรียน</h3>
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> หน้าหลัก</a></li>
+            <li><a href="#" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> แดชบอร์ด</a></li>
+            <li><a href="#" class="nav-link" data-page="search"><i class="fas fa-search"></i> ค้นหากิจกรรม</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> ตั้งค่า</a></li>
+            <li><a href="#"><i class="fas fa-sign-out-alt"></i> ออกจากระบบ</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content full-width" id="main-content">
+        <header>
+            <button id="menu-toggle"><i class="fas fa-bars"></i></button>
+            <h1 id="page-title">หน้าหลัก</h1>
+        </header>
+
+        <div class="content-wrapper">
+            <section id="home-page" class="page active">
+                <div class="card">
+                    <h2>ปฏิทินกิจกรรม เดือนกันยายน 2568</h2>
+                    <p>นี่คือตัวอย่างปฏิทินกิจกรรมของโรงเรียน คุณสามารถเพิ่มตารางปฏิทินจริงได้ที่นี่</p>
+                    </div>
+                <div class="card">
+                    <h2>กิจกรรมล่าสุด</h2>
+                    <ul>
+                        <li>15 ก.ย. - ประชุมผู้ปกครอง</li>
+                        <li>20 ก.ย. - กีฬาสีประจำปี</li>
+                        <li>25 ก.ย. - สอบปลายภาค</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="dashboard-page" class="page">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <div class="icon"><i class="fas fa-calendar-check"></i></div>
+                        <div class="stat-number">15</div>
+                        <div class="stat-label">กิจกรรมในเดือนนี้</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="icon"><i class="fas fa-user-friends"></i></div>
+                        <div class="stat-number">1,250</div>
+                        <div class="stat-label">นักเรียนทั้งหมด</div>
+                    </div>
+                    <div class="dashboard-card">
+                        <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <div class="stat-number">85</div>
+                        <div class="stat-label">คุณครูและบุคลากร</div>
+                    </div>
+                     <div class="dashboard-card">
+                        <div class="icon"><i class="fas fa-bell"></i></div>
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">ประกาศใหม่</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="search-page" class="page">
+                <div class="card">
+                    <h2>ค้นหากิจกรรมในปฏิทิน</h2>
+                    <form class="search-form" onsubmit="return false;">
+                        <input type="text" placeholder="พิมพ์ชื่อกิจกรรม, วันที่, หรือคำสำคัญ...">
+                        <button type="submit"><i class="fas fa-search"></i> ค้นหา</button>
+                    </form>
+                    <div class="search-results">
+                        <p>ตัวอย่าง: ค้นหา "กีฬาสี" จะพบกิจกรรมวันที่ 20 ก.ย.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Elements Selection ---
+            const menuToggle = document.getElementById('menu-toggle');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('main-content');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page');
+            const pageTitle = document.getElementById('page-title');
+            const loadingScreen = document.getElementById('loading-screen');
+
+            // --- Loading Screen ---
+            // ซ่อนหน้าจอโหลดดิ้งหลังจากที่หน้าเว็บโหลดเสร็จ
+            window.addEventListener('load', () => {
+                loadingScreen.classList.add('hidden');
+            });
+
+            // --- Sidebar Toggle Functionality ---
+            menuToggle.addEventListener('click', () => {
+                // สำหรับจอใหญ่: ยุบ/ขยาย Sidebar และ Main Content
+                if (window.innerWidth > 768) {
+                    sidebar.classList.toggle('closed');
+                    mainContent.classList.toggle('full-width');
+                } else {
+                    // สำหรับจอมือถือ: เปิด/ปิด Sidebar แบบซ้อนทับ
+                    sidebar.classList.toggle('closed');
+                     sidebar.classList.toggle('open');
+                }
+            });
+
+            // --- Page Navigation ---
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(event) {
+                    event.preventDefault(); // ป้องกันการรีโหลดหน้า
+
+                    // 1. จัดการ Active Class ของลิงก์
+                    navLinks.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+
+                    // 2. สลับหน้าที่จะแสดง
+                    const targetPageId = this.getAttribute('data-page');
+                    pages.forEach(page => {
+                        if (page.id === targetPageId + '-page') {
+                            page.classList.add('active');
+                        } else {
+                            page.classList.remove('active');
+                        }
+                    });
+
+                    // 3. อัปเดตชื่อหัวข้อของหน้า
+                    pageTitle.textContent = this.textContent;
+
+                    // 4. ถ้าเป็นจอมือถือ ให้ปิดเมนูหลังคลิก
+                    if (window.innerWidth <= 768) {
+                         sidebar.classList.remove('open');
+                         sidebar.classList.add('closed');
+                    }
+                });
+            });
+
+            // ปรับการแสดงผล sidebar เมื่อปรับขนาดหน้าจอ
+            window.addEventListener('resize', () => {
+                if(window.innerWidth > 768) {
+                    sidebar.classList.remove('open'); // เอา class 'open' ออกสำหรับจอใหญ่
+                }
+            });
+            
+            // ตั้งค่าเริ่มต้นสำหรับ sidebar ตามขนาดหน้าจอ
+            if(window.innerWidth <= 768) {
+                sidebar.classList.add('closed');
+                mainContent.classList.add('full-width');
+            } else {
+                sidebar.classList.remove('closed');
+                mainContent.classList.remove('full-width');
+            }
+        });
+    </script>
+</body>
+</html>
