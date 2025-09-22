@@ -37,297 +37,156 @@
             display: flex;
         }
         
-        /* --- 2. Loading Screen --- */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* --- CSS อื่นๆ (เหมือนเดิม) --- */
+        #loading-screen, .sidebar, .main-content, header, .page, .card, .form-group, button.btn-primary {
+             /* โค้ด CSS ส่วนนี้เหมือนเดิมทั้งหมด */
+        }
+        
+        #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background-color: var(--primary-color); display: flex; justify-content: center; align-items: center; z-index: 1000; flex-direction: column; color: white; transition: opacity 0.5s ease-out, visibility 0.5s ease-out; }
+        .spinner { border: 8px solid rgba(255, 255, 255, 0.3); border-top: 8px solid var(--secondary-color); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #loading-screen.hidden { opacity: 0; visibility: hidden; }
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); color: var(--sidebar-text-color); height: 100vh; position: fixed; top: 0; left: 0; transition: transform 0.3s ease-in-out; z-index: 100; }
+        .sidebar.closed { transform: translateX(-100%); }
+        .sidebar-header { padding: 20px; text-align: center; border-bottom: 1px solid #495057; }
+        .sidebar-header h3 { color: var(--secondary-color); font-weight: 700; }
+        .sidebar-nav ul { list-style: none; padding: 20px 0; }
+        .sidebar-nav li a { display: flex; align-items: center; padding: 15px 20px; color: var(--sidebar-text-color); text-decoration: none; transition: background-color 0.2s, padding-left 0.2s; }
+        .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: var(--primary-color); padding-left: 25px; }
+        .sidebar-nav li a i { margin-right: 15px; width: 20px; text-align: center; }
+        .main-content { flex-grow: 1; margin-left: 260px; padding: 20px; transition: margin-left 0.3s ease-in-out; }
+        .main-content.full-width { margin-left: 0; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 10px; background-color: var(--card-bg); border-radius: 8px; box-shadow: var(--shadow); margin-bottom: 20px; }
+        #menu-toggle { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--primary-color); }
+        #page-title { font-size: 1.5rem; font-weight: 700; color: var(--primary-color); }
+        .page { display: none; }
+        .page.active { display: block; }
+        .card { background-color: var(--card-bg); border-radius: 8px; padding: 20px; box-shadow: var(--shadow); margin-bottom: 20px; }
+        .card h2 { color: var(--primary-color); border-bottom: 2px solid var(--secondary-color); padding-bottom: 10px; margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--primary-color); }
+        button.btn-primary { background-color: var(--primary-color); color: white; padding: 12px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; font-weight: 500; width: 100%; }
+        #saved-activities-list { list-style: none; }
+        #saved-activities-list li { background: #f1f1f1; padding: 15px; border-radius: 5px; margin-bottom: 10px; border-left: 5px solid var(--primary-color); }
+        #saved-activities-list li strong { font-size: 1.1rem; color: var(--primary-color); }
+        #saved-activities-list li small { display: block; color: #666; margin-bottom: 5px; }
+        
+        /* --- NEW: Calendar Styles --- */
+        .calendar-container {
             width: 100%;
-            height: 100vh;
-            background-color: var(--primary-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            flex-direction: column;
-            color: white;
-            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+            background: var(--card-bg);
         }
-
-        .spinner {
-            border: 8px solid rgba(255, 255, 255, 0.3);
-            border-top: 8px solid var(--secondary-color);
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        #loading-screen.hidden {
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        /* --- 3. Sidebar Menu --- */
-        .sidebar {
-            width: 260px;
-            background-color: var(--sidebar-bg);
-            color: var(--sidebar-text-color);
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            transition: transform 0.3s ease-in-out;
-            z-index: 100;
-        }
-
-        .sidebar.closed {
-            transform: translateX(-100%);
-        }
-        
-        .sidebar-header {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #495057;
-        }
-
-        .sidebar-header h3 {
-            color: var(--secondary-color);
-            font-weight: 700;
-        }
-
-        .sidebar-nav ul {
-            list-style: none;
-            padding: 20px 0;
-        }
-
-        .sidebar-nav li a {
-            display: flex;
-            align-items: center;
-            padding: 15px 20px;
-            color: var(--sidebar-text-color);
-            text-decoration: none;
-            transition: background-color 0.2s, padding-left 0.2s;
-        }
-
-        .sidebar-nav li a:hover, .sidebar-nav li a.active {
-            background-color: var(--primary-color);
-            padding-left: 25px;
-        }
-
-        .sidebar-nav li a i {
-            margin-right: 15px;
-            width: 20px;
-            text-align: center;
-        }
-
-        /* --- 4. Main Content Area --- */
-        .main-content {
-            flex-grow: 1;
-            margin-left: 260px;
-            padding: 20px;
-            transition: margin-left 0.3s ease-in-out;
-        }
-
-        .main-content.full-width {
-            margin-left: 0;
-        }
-        
-        header {
+        .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
+            padding: 10px 0;
+            color: var(--primary-color);
         }
-
-        #menu-toggle {
+        #month-year {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .calendar-nav button {
             background: none;
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--primary-color);
         }
-
-        #page-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-color);
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
         }
-        
-        .page {
-            display: none;
-        }
-        
-        .page.active {
-            display: block;
-        }
-        
-        .card {
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-        }
-
-        .card h2 {
-            color: var(--primary-color);
-            border-bottom: 2px solid var(--secondary-color);
-            padding-bottom: 10px;
-            margin-bottom: 15px;
-        }
-        
-        /* General Form Styles */
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-        }
-        .form-group input, .form-group textarea {
-            width: 100%;
+        .calendar-grid div {
+            text-align: center;
             padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
-         .form-group input:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
+        .calendar-day-name {
+            font-weight: 700;
+            color: var(--text-color);
         }
-
-        button.btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
+        .calendar-date {
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 1rem;
-            font-weight: 500;
-            width: 100%;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .calendar-date:hover {
+            background-color: var(--secondary-color);
+            color: #fff;
+        }
+        .calendar-date.today {
+            background-color: var(--primary-color);
+            color: #fff;
+            font-weight: 700;
+        }
+        .calendar-date.empty {
+            cursor: default;
+        }
+        .calendar-date.empty:hover {
+            background-color: transparent;
         }
 
-        /* --- 5. Page Specific Styles --- */
-        
-        /* Saved Activities List */
-        #saved-activities-list {
-            list-style: none;
-        }
-        #saved-activities-list li {
-            background: #f1f1f1;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            border-left: 5px solid var(--primary-color);
-        }
-         #saved-activities-list li strong {
-            font-size: 1.1rem;
-            color: var(--primary-color);
-        }
-        #saved-activities-list li small {
-            display: block;
-            color: #666;
-            margin-bottom: 5px;
-        }
-
-        /* --- 6. Responsive Design --- */
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-                z-index: 200;
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-            }
-            #page-title {
-                font-size: 1.2rem;
-            }
+            .sidebar { transform: translateX(-100%); z-index: 200; }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; width: 100%; }
+            #page-title { font-size: 1.2rem; }
         }
     </style>
 </head>
 <body>
 
-    <div id="loading-screen">
-        <div class="spinner"></div>
-        <p>กำลังโหลดข้อมูลปฏิทิน...</p>
-    </div>
-
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h3><i class="fas fa-calendar-alt"></i> ปฏิทินโรงเรียน</h3>
-        </div>
-        <ul class="sidebar-nav">
-            <li><a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> หน้าหลัก</a></li>
-            <li><a href="#" class="nav-link" data-page="save"><i class="fas fa-save"></i> บันทึกกิจกรรม</a></li>
-            <li><a href="#" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> แดชบอร์ด</a></li>
-            <li><a href="#" class="nav-link" data-page="search"><i class="fas fa-search"></i> ค้นหากิจกรรม</a></li>
-        </ul>
-    </nav>
-
+    <div id="loading-screen"><div class="spinner"></div><p>กำลังโหลดข้อมูลปฏิทิน...</p></div>
+    <nav class="sidebar" id="sidebar"><div class="sidebar-header"><h3><i class="fas fa-calendar-alt"></i> ปฏิทินโรงเรียน</h3></div><ul class="sidebar-nav"><li><a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> หน้าหลัก</a></li><li><a href="#" class="nav-link" data-page="save"><i class="fas fa-save"></i> บันทึกกิจกรรม</a></li><li><a href="#" class="nav-link" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> แดชบอร์ด</a></li><li><a href="#" class="nav-link" data-page="search"><i class="fas fa-search"></i> ค้นหากิจกรรม</a></li></ul></nav>
+    
     <main class="main-content" id="main-content">
-        <header>
-            <button id="menu-toggle"><i class="fas fa-bars"></i></button>
-            <h1 id="page-title">หน้าหลัก</h1>
-        </header>
+        <header><button id="menu-toggle"><i class="fas fa-bars"></i></button><h1 id="page-title">หน้าหลัก</h1></header>
 
         <div class="content-wrapper">
-            <section id="home-page" class="page active">
-                <div class="card">
-                    <h2><i class="fas fa-calendar-check"></i> กิจกรรมที่บันทึกไว้</h2>
-                    <ul id="saved-activities-list">
-                        </ul>
-                </div>
-            </section>
-
-            <section id="save-page" class="page">
-                <div class="card">
-                    <h2><i class="fas fa-edit"></i> เพิ่มกิจกรรมใหม่</h2>
-                    <form id="save-activity-form">
-                        <div class="form-group">
-                            <label for="activity-name">ชื่อกิจกรรม</label>
-                            <input type="text" id="activity-name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="activity-date">วันที่</label>
-                            <input type="date" id="activity-date" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="activity-desc">รายละเอียด (ถ้ามี)</label>
-                            <textarea id="activity-desc" rows="4"></textarea>
-                        </div>
-                        <button type="submit" class="btn-primary">บันทึกกิจกรรม</button>
-                    </form>
-                </div>
-            </section>
+            <section id="home-page" class="page active"><div class="card"><h2><i class="fas fa-calendar-check"></i> กิจกรรมที่บันทึกไว้</h2><ul id="saved-activities-list"></ul></div></section>
+            <section id="save-page" class="page"><div class="card"><h2><i class="fas fa-edit"></i> เพิ่มกิจกรรมใหม่</h2><form id="save-activity-form"><div class="form-group"><label for="activity-name">ชื่อกิจกรรม</label><input type="text" id="activity-name" required></div><div class="form-group"><label for="activity-date">วันที่</label><input type="date" id="activity-date" required></div><div class="form-group"><label for="activity-desc">รายละเอียด (ถ้ามี)</label><textarea id="activity-desc" rows="4"></textarea></div><button type="submit" class="btn-primary">บันทึกกิจกรรม</button></form></div></section>
 
             <section id="dashboard-page" class="page">
-                 </section>
+                <div class="card">
+                    <h2><i class="fas fa-calendar-day"></i> ปฏิทินประจำเดือน</h2>
+                    <div class="calendar-container">
+                        <div class="calendar-header">
+                            <div class="calendar-nav">
+                                <button id="prev-month-btn"><i class="fas fa-chevron-left"></i></button>
+                            </div>
+                            <div id="month-year"></div>
+                            <div class="calendar-nav">
+                                <button id="next-month-btn"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="calendar-grid" id="calendar-days-header">
+                            </div>
+                        <div class="calendar-grid" id="calendar-dates-grid">
+                            </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2><i class="fas fa-chart-bar"></i> สรุปภาพรวม</h2>
+                     <p>เนื้อหาสรุปภาพรวม...</p>
+                </div>
+
+            </section>
 
             <section id="search-page" class="page">
-                 </section>
+                 <div class="card"><h2>ค้นหากิจกรรม</h2><p>หน้าสำหรับค้นหากิจกรรม...</p></div>
+            </section>
         </div>
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // --- Elements Selection ---
+            // --- Elements (เหมือนเดิม) ---
             const menuToggle = document.getElementById('menu-toggle');
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('main-content');
@@ -335,132 +194,97 @@
             const pages = document.querySelectorAll('.page');
             const pageTitle = document.getElementById('page-title');
             const loadingScreen = document.getElementById('loading-screen');
-            
-            // --- NEW: Elements for Save Activity ---
             const saveActivityForm = document.getElementById('save-activity-form');
-            const activityNameInput = document.getElementById('activity-name');
-            const activityDateInput = document.getElementById('activity-date');
-            const activityDescInput = document.getElementById('activity-desc');
             const savedActivitiesList = document.getElementById('saved-activities-list');
-
-            // --- Loading Screen ---
-            window.addEventListener('load', () => {
-                loadingScreen.classList.add('hidden');
-            });
-
-            // --- Sidebar Toggle Functionality ---
-            menuToggle.addEventListener('click', () => {
-                if (window.innerWidth > 768) {
-                    sidebar.classList.toggle('closed');
-                    mainContent.classList.toggle('full-width');
-                } else {
-                    sidebar.classList.toggle('open');
-                    sidebar.classList.toggle('closed');
-                }
-            });
             
-             // --- Page Navigation ---
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(event) {
-                    event.preventDefault();
-                    navLinks.forEach(nav => nav.classList.remove('active'));
-                    this.classList.add('active');
-                    const targetPageId = this.getAttribute('data-page');
-                    pages.forEach(page => {
-                        page.classList.toggle('active', page.id === targetPageId + '-page');
-                    });
-                    pageTitle.textContent = this.textContent;
-                    if (window.innerWidth <= 768) {
-                        sidebar.classList.remove('open');
-                        sidebar.classList.add('closed');
-                    }
-                });
-            });
-            
-            // --- NEW: Activity Saving Logic ---
-            
-            /**
-             * ดึงข้อมูลกิจกรรมจาก Local Storage
-             * @returns {Array} - Array ของ Object กิจกรรม
-             */
-            function getActivities() {
-                // ดึงข้อมูลที่เป็น string จาก 'schoolActivities' ถ้าไม่มีให้คืนค่าเป็น '[]'
-                const activities = localStorage.getItem('schoolActivities');
-                // แปลง string JSON กลับเป็น Array/Object
-                return activities ? JSON.parse(activities) : [];
-            }
+            // --- NEW: Calendar Elements ---
+            const monthYearEl = document.getElementById('month-year');
+            const calendarDatesGrid = document.getElementById('calendar-dates-grid');
+            const calendarDaysHeader = document.getElementById('calendar-days-header');
+            const prevMonthBtn = document.getElementById('prev-month-btn');
+            const nextMonthBtn = document.getElementById('next-month-btn');
 
-            /**
-             * แสดงกิจกรรมบนหน้าเว็บ
-             */
-            function displayActivities() {
-                const activities = getActivities();
-                // เรียงลำดับกิจกรรมตามวันที่จากเก่าไปใหม่
-                activities.sort((a, b) => new Date(a.date) - new Date(b.date));
+            let currentDate = new Date(); // เก็บวันที่ปัจจุบันสำหรับปฏิทิน
 
-                savedActivitiesList.innerHTML = ''; // เคลียร์รายการเก่าก่อน
+            // --- Loading & Navigation (เหมือนเดิม) ---
+            window.addEventListener('load', () => { loadingScreen.classList.add('hidden'); });
+            menuToggle.addEventListener('click', () => { if (window.innerWidth > 768) { sidebar.classList.toggle('closed'); mainContent.classList.toggle('full-width'); } else { sidebar.classList.toggle('open'); sidebar.classList.toggle('closed'); } });
+            navLinks.forEach(link => { link.addEventListener('click', function(event) { event.preventDefault(); navigateTo(this.getAttribute('data-page')); }); });
+            function navigateTo(pageId) { navLinks.forEach(nav => { nav.classList.toggle('active', nav.getAttribute('data-page') === pageId); }); pages.forEach(page => { page.classList.toggle('active', page.id === pageId + '-page'); }); const activeLink = document.querySelector(`.nav-link[data-page="${pageId}"]`); if (activeLink) { pageTitle.textContent = activeLink.textContent; } if (window.innerWidth <= 768) { sidebar.classList.remove('open'); sidebar.classList.add('closed'); } }
+
+            // --- Activity Saving Logic (เหมือนเดิม) ---
+            function getActivities() { const activities = localStorage.getItem('schoolActivities'); return activities ? JSON.parse(activities) : []; }
+            function displayActivities() { const activities = getActivities(); activities.sort((a, b) => new Date(a.date) - new Date(b.date)); savedActivitiesList.innerHTML = ''; if (activities.length === 0) { savedActivitiesList.innerHTML = '<li>ยังไม่มีกิจกรรมที่บันทึกไว้</li>'; return; } activities.forEach(activity => { const li = document.createElement('li'); li.innerHTML = `<strong>${activity.name}</strong><small>วันที่: ${activity.date}</small><p>${activity.desc}</p>`; savedActivitiesList.appendChild(li); }); }
+            saveActivityForm.addEventListener('submit', function(event) { event.preventDefault(); const newActivity = { id: Date.now(), name: saveActivityForm.elements['activity-name'].value, date: saveActivityForm.elements['activity-date'].value, desc: saveActivityForm.elements['activity-desc'].value }; const activities = getActivities(); activities.push(newActivity); localStorage.setItem('schoolActivities', JSON.stringify(activities)); alert('บันทึกกิจกรรมเรียบร้อยแล้ว!'); saveActivityForm.reset(); displayActivities(); navigateTo('home'); });
+
+            // --- NEW: Calendar Rendering Logic ---
+            function renderCalendar() {
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth();
                 
-                if (activities.length === 0) {
-                    savedActivitiesList.innerHTML = '<li>ยังไม่มีกิจกรรมที่บันทึกไว้</li>';
-                    return;
+                const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+                monthYearEl.textContent = `${monthNames[month]} ${year + 543}`; // +543 เพื่อเป็น พ.ศ.
+
+                calendarDatesGrid.innerHTML = '';
+
+                const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0=อาทิตย์, 1=จันทร์
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                // 1. สร้างช่องว่างก่อนวันที่ 1
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    const emptyCell = document.createElement('div');
+                    emptyCell.classList.add('calendar-date', 'empty');
+                    calendarDatesGrid.appendChild(emptyCell);
                 }
 
-                activities.forEach(activity => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `
-                        <strong>${activity.name}</strong>
-                        <small>วันที่: ${activity.date}</small>
-                        <p>${activity.desc}</p>
-                    `;
-                    savedActivitiesList.appendChild(li);
+                // 2. สร้างวันที่ในเดือน
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dateCell = document.createElement('div');
+                    dateCell.classList.add('calendar-date');
+                    dateCell.textContent = day;
+
+                    // ไฮไลต์วันปัจจุบัน
+                    const today = new Date();
+                    if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                        dateCell.classList.add('today');
+                    }
+                    calendarDatesGrid.appendChild(dateCell);
+                }
+            }
+            
+            // สร้าง Header วันในสัปดาห์
+            function renderDayNames() {
+                const dayNames = ['อา', 'จ', 'อ', 'พ', 'พฤ', 'ศ', 'ส'];
+                calendarDaysHeader.innerHTML = '';
+                dayNames.forEach(day => {
+                    const dayNameCell = document.createElement('div');
+                    dayNameCell.classList.add('calendar-day-name');
+                    dayNameCell.textContent = day;
+                    calendarDaysHeader.appendChild(dayNameCell);
                 });
             }
 
-            // จัดการ Event เมื่อฟอร์มถูก Submit
-            saveActivityForm.addEventListener('submit', function(event) {
-                event.preventDefault(); // ป้องกันหน้าเว็บรีโหลด
-
-                // 1. สร้าง Object กิจกรรมใหม่
-                const newActivity = {
-                    id: Date.now(), // ใช้ timestamp เป็น ID ง่ายๆ
-                    name: activityNameInput.value,
-                    date: activityDateInput.value,
-                    desc: activityDescInput.value
-                };
-
-                // 2. ดึงข้อมูลกิจกรรมเก่ามา
-                const activities = getActivities();
-
-                // 3. เพิ่มกิจกรรมใหม่เข้าไปใน Array
-                activities.push(newActivity);
-
-                // 4. บันทึก Array ที่อัปเดตแล้วกลับลง Local Storage (ต้องแปลงเป็น JSON string ก่อน)
-                localStorage.setItem('schoolActivities', JSON.stringify(activities));
-
-                // 5. แจ้งเตือนและเคลียร์ฟอร์ม
-                alert('บันทึกกิจกรรมเรียบร้อยแล้ว!');
-                saveActivityForm.reset(); // หรือใช้ activityNameInput.value = '' ก็ได้
-
-                // 6. อัปเดตการแสดงผล
-                displayActivities();
+            // Event Listeners สำหรับปุ่มเลื่อนเดือน
+            prevMonthBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                renderCalendar();
             });
 
+            nextMonthBtn.addEventListener('click', () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                renderCalendar();
+            });
 
             // --- Initial Setup ---
             function initializeApp() {
-                // ตั้งค่า sidebar ตามขนาดหน้าจอ
-                if (window.innerWidth <= 768) {
-                    sidebar.classList.add('closed');
-                    mainContent.classList.add('full-width');
-                } else {
-                    sidebar.classList.remove('closed');
-                    mainContent.classList.remove('full-width');
-                }
-                // แสดงกิจกรรมที่เคยบันทึกไว้ทันทีที่เปิดหน้าเว็บ
+                if (window.innerWidth <= 768) { sidebar.classList.add('closed'); mainContent.classList.add('full-width'); } else { sidebar.classList.remove('closed'); mainContent.classList.remove('full-width'); }
                 displayActivities();
+                // --- NEW: Call calendar functions ---
+                renderDayNames();
+                renderCalendar();
             }
 
-            initializeApp(); // เรียกใช้ฟังก์ชันเริ่มต้น
+            initializeApp();
         });
     </script>
 </body>
